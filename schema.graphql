@@ -18,38 +18,38 @@ type StarterEntity @entity {
 
 type ParasumpInfo @entity {
   id: ID!
-  block_height: BigInt!
+  block_height: Int!
   block_timestamp: Date!
   method: String!
   data: String!
 }
 
 
-type Memoupdated @entity{
+type CrowdloanMemoupdated @entity{
   id: ID! # blockHeight + '-' + eventId
-  blockHeight: Int
-  eventId: Int
-  extrinsicId: Int
-  time: Date
-  accountId: String
-  paraId: String
+  block_height: Int!
+  event_id: Int!
+  extrinsic_id: Int!
+  block_timestamp: Date!
+  account: String
+  para_id: String
   memo: String
 }
 
-type Contributed @entity{
+type CrowdloanContributed @entity{
   id: ID! # blockHeight + '-' + eventId
-  blockHeight: Int
-  eventId: Int
-  extrinsicId: Int
-  time: Date
-  accountId: String
-  paraId: String
-  balanceOf: String
+  block_height: Int!
+  event_id: Int!
+  extrinsic_id: Int!
+  block_timestamp: Date!
+  account: String
+  para_id: String
+  balance: String
 }
 
 type CrowdloanInfo @entity {
   id: ID!
-  blockHeight: BigInt!
+  block_height: Int!
   method: String!
   data: String!
 }
