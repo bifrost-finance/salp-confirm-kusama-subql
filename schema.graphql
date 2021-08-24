@@ -15,3 +15,41 @@ type StarterEntity @entity {
 
 
 }
+
+type ParasumpInfo @entity {
+  id: ID!
+  block_height: BigInt!
+  block_timestamp: Date!
+  method: String!
+  data: String!
+}
+
+
+type Memoupdated @entity{
+  id: ID! # blockHeight + '-' + eventId
+  blockHeight: Int
+  eventId: Int
+  extrinsicId: Int
+  time: Date
+  accountId: String
+  paraId: String
+  memo: String
+}
+
+type Contributed @entity{
+  id: ID! # blockHeight + '-' + eventId
+  blockHeight: Int
+  eventId: Int
+  extrinsicId: Int
+  time: Date
+  accountId: String
+  paraId: String
+  balanceOf: String
+}
+
+type CrowdloanInfo @entity {
+  id: ID!
+  blockHeight: BigInt!
+  method: String!
+  data: String!
+}
