@@ -53,3 +53,24 @@ type CrowdloanInfo @entity {
   method: String!
   data: String!
 }
+
+# type CrowdloanMerged @entity{
+#   id: ID! # blockHeight + '-' + eventId
+#   block_height: Int!
+#   event_id: Int!
+#   extrinsic_id: Int!
+#   block_timestamp: Date!
+#   account: String
+#   para_id: String
+#   balance: String
+#   memo: String
+# }
+
+type SystemExtrinsicFailed @entity {
+  id: ID!
+  block_height: Int!
+  event_id: Int!
+  extrinsic_id: Int!
+  block_timestamp: Date!
+  data: String!
+}
