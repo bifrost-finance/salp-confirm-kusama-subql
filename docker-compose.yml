@@ -44,4 +44,4 @@ services:
     command:
       - --name=app
       - --playground
-      - --indexer=http://subquery-node:3000
+      # - --indexer=http://subquery-node:3000

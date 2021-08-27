@@ -1,20 +1,20 @@
-type StarterEntity @entity {
+# type StarterEntity @entity {
 
-  id: ID! #id is a required field
+#   id: ID! #id is a required field
 
-  field1: Int!
+#   field1: Int!
 
-  field2: String #filed2 is an optional field
+#   field2: String #filed2 is an optional field
 
-  field3: BigInt
+#   field3: BigInt
 
-  field4: Date
+#   field4: Date
 
-  field5: Boolean
+#   field5: Boolean
 
 
 
-}
+# }
 
 type ParasumpInfo @entity {
   id: ID!
@@ -48,12 +48,12 @@ type CrowdloanContributed @entity{
   message_id: String
 }
 
-type CrowdloanInfo @entity {
-  id: ID!
-  block_height: Int!
-  method: String!
-  data: String!
-}
+# type CrowdloanInfo @entity {
+#   id: ID!
+#   block_height: Int!
+#   method: String!
+#   data: String!
+# }
 
 # type CrowdloanMerged @entity{
 #   id: ID! # blockHeight + '-' + eventId
@@ -67,11 +67,11 @@ type CrowdloanInfo @entity {
 #   memo: String
 # }
 
-type SystemExtrinsicFailed @entity {
-  id: ID!
-  block_height: Int!
-  event_id: Int!
-  extrinsic_id: Int!
-  block_timestamp: Date!
-  data: String!
-}
+# type SystemExtrinsicFailed @entity {
+#   id: ID!
+#   block_height: Int!
+#   event_id: Int!
+#   extrinsic_id: Int!
+#   block_timestamp: Date!
+#   data: String!
+# }
