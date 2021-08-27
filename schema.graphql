@@ -45,6 +45,7 @@ type CrowdloanContributed @entity{
   account: String
   para_id: String
   balance: String
+  message_id: String
 }
 
 type CrowdloanInfo @entity {

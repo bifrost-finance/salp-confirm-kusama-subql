@@ -34,5 +34,6 @@ export async function handleContributed(event: SubstrateEvent): Promise<void> {
   entity.account = account_id;
   entity.para_id = para_id;
   entity.balance = balance;
+  entity.message_id = "message_id";
   await entity.save();
 }
