@@ -7,9 +7,10 @@ import { ParasumpInfo } from "../types/models/ParasumpInfo";
 import { SystemExtrinsicFailed } from "../types/models/SystemExtrinsicFailed";
 import { CrowdloanContributed } from "../types/models/CrowdloanContributed";
 
-const paraId = 2000;
+const paraId = 200;
 const CrowdloanContributedEventId = '0x4901';
 const ParasumpExecutedUpwardEventId = '0x3b02';
+const ParasumpWeightExhaustedEventId = '0x3b03';
 const ParasumpUpwardMessagesReceivedEventId = '0x3b04';
 
 export async function parasUmp(block: SubstrateBlock): Promise<void> {
@@ -31,7 +32,12 @@ export async function parasUmp(block: SubstrateBlock): Promise<void> {
 export async function handleParasUmpUpwardMessagesReceived(event: SubstrateEvent): Promise<void> {
   const blockNumber = event.block.block.header.number.toNumber();
   if (JSON.parse(event.event.data.toString())[0] === paraId) {
-    const crowdloanEvents = event.extrinsic.events.filter(e => (e.event.index as EventId).toString() == CrowdloanContributedEventId || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId) as SubstrateEvent[];
+    const crowdloanEvents = event.extrinsic.events.filter(
+      e =>
+        (e.event.index as EventId).toString() == CrowdloanContributedEventId
+        || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId
+        || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
+    ) as SubstrateEvent[];
     const len = crowdloanEvents.length;
     for (let i = 0; i < len; i++) {
       if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i > 0) {
@@ -56,6 +62,16 @@ export async function handleParasUmpUpwardMessagesReceived(event: SubstrateEvent
           await record.save();
         }
       } else if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i == 0) {
+        const record = new CrowdloanContributed(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
+        record.block_height = blockNumber;
+        record.event_id = crowdloanEvents[i].idx;
+        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
+        record.block_timestamp = crowdloanEvents[i].block.timestamp;
+        record.message_id = crowdloanEvents[i].event.data[0].toString();
+        await record.save();
+        logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
+      }
+      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId) {
         const record = new CrowdloanContributed(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
         record.block_height = blockNumber;
         record.event_id = crowdloanEvents[i].idx;
