@@ -3,8 +3,6 @@ import { BlockNumber } from "@polkadot/types/interfaces";
 import { EventId } from "@polkadot/types/interfaces/system";
 import { Compact } from '@polkadot/types';
 import { ParasumpInfo } from "../types/models/ParasumpInfo";
-// import { CrowdloanMerged } from "../types/models/CrowdloanMerged";
-import { SystemExtrinsicFailed } from "../types/models/SystemExtrinsicFailed";
 import { CrowdloanContributed } from "../types/models/CrowdloanContributed";
 
 const paraId = 200;
