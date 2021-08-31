@@ -14,15 +14,6 @@ dataSources:
     # startBlock: 8324700
     mapping:
       handlers:
-        # - handler: handleBlock
-        #   kind: substrate/BlockHandler
-        # - handler: handleEvent
-        #   kind: substrate/EventHandler
-        #   filter:
-        #     module: balances
-        #     method: Deposit
-        # - handler: handleCall
-        #   kind: substrate/CallHandler
         - handler: parasUmp
           kind: substrate/BlockHandler
         - handler: handleParasUmpUpwardMessagesReceived
@@ -35,11 +26,6 @@ dataSources:
         #   filter:
         #     module: crowdloan
         #     method: Contributed
-        # - handler: handleMemo
-        #   kind: substrate/EventHandler
-        #   filter:
-        #     module: crowdloan
-        #     method: MemoUpdated
         # - handler: handleSystemExtrinsicFailed
         #   kind: substrate/EventHandler
         #   filter:

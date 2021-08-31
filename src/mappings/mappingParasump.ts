@@ -7,6 +7,8 @@ import { CrowdloanContributed } from "../types/models/CrowdloanContributed";
 
 const paraId = 200;
 const CrowdloanContributedEventId = '0x4901';
+const ParasumpInvalidFormatEventId = '0x3b00';
+const ParasumpUnsupportedVersionEventId = '0x3b01';
 const ParasumpExecutedUpwardEventId = '0x3b02';
 const ParasumpWeightExhaustedEventId = '0x3b03';
 const ParasumpUpwardMessagesReceivedEventId = '0x3b04';
@@ -35,6 +37,8 @@ export async function handleParasUmpUpwardMessagesReceived(event: SubstrateEvent
         (e.event.index as EventId).toString() == CrowdloanContributedEventId
         || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId
         || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
+        || (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
+        || (e.event.index as EventId).toString() == ParasumpUnsupportedVersionEventId
     ) as SubstrateEvent[];
     const len = crowdloanEvents.length;
     for (let i = 0; i < len; i++) {
@@ -69,7 +73,7 @@ export async function handleParasUmpUpwardMessagesReceived(event: SubstrateEvent
         await record.save();
         logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
       }
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId) {
+      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId || ParasumpInvalidFormatEventId || ParasumpUnsupportedVersionEventId) {
         const record = new CrowdloanContributed(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
         record.block_height = blockNumber;
         record.event_id = crowdloanEvents[i].idx;
@@ -77,7 +81,6 @@ export async function handleParasUmpUpwardMessagesReceived(event: SubstrateEvent
         record.block_timestamp = crowdloanEvents[i].block.timestamp;
         record.message_id = crowdloanEvents[i].event.data[0].toString();
         await record.save();
-        logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
       }
     }
   }
