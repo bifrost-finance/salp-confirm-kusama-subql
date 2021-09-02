@@ -15,8 +15,8 @@ const ParasumpUpwardMessagesReceivedEventId = '0x3b04';
 
 export async function parasUmp(block: SubstrateBlock): Promise<void> {
   const blockNumber = block.block.header.number.toNumber();
-  // const upwardMessagesReceivedEvents = block.events.filter(e => e.event.section === 'parasUmp' && e.event.method === 'UpwardMessagesReceived' && JSON.parse(e.event.data.toString())[0] === paraId) as SubstrateEvent[];
-  const upwardMessagesReceivedEvents = block.events.filter(e => e.event.section === 'parasUmp') as SubstrateEvent[];
+  // const upwardMessagesReceivedEvents = block.events.filter(e => e.event.section === 'ump' && e.event.method === 'UpwardMessagesReceived' && JSON.parse(e.event.data.toString())[0] === paraId) as SubstrateEvent[];
+  const upwardMessagesReceivedEvents = block.events.filter(e => e.event.section === 'ump') as SubstrateEvent[];
   for (let upwardMessagesReceivedEvent of upwardMessagesReceivedEvents) {
     const { event: { data, section, method } } = upwardMessagesReceivedEvent;
     const record = new ParasumpInfo(blockNumber.toString() + '-' + upwardMessagesReceivedEvent.idx.toString());

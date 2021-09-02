@@ -19,7 +19,7 @@ dataSources:
         - handler: handleParasUmpUpwardMessagesReceived
           kind: substrate/EventHandler
           filter:
-            module: parasUmp
+            module: ump
             method: UpwardMessagesReceived
         # - handler: handleContributed
         #   kind: substrate/EventHandler
