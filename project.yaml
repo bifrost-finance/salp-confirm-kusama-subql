@@ -31,3 +31,23 @@ dataSources:
         #   filter:
         #     module: system
         #     method: ExtrinsicFailed
+        - handler: handleUmpExecutedUpward
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: ExecutedUpward
+        - handler: handleUmpWeightExhausted
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: WeightExhausted
+        - handler: handleUmpInvalidFormat
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: InvalidFormat
+        - handler: handleUmpUnsupportedVersion
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: UnsupportedVersion

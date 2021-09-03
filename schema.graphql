@@ -18,6 +18,18 @@ type CrowdloanContributed @entity{
   message_id: String
 }
 
+type CrowdloanContributedSecondCheck @entity{
+  id: ID! # blockHeight + '-' + eventId
+  block_height: Int!
+  event_id: Int!
+  extrinsic_id: Int!
+  block_timestamp: Date!
+  account: String
+  para_id: String
+  balance: String
+  message_id: String
+}
+
 # type CrowdloanInfo @entity {
 #   id: ID!
 #   block_height: Int!
