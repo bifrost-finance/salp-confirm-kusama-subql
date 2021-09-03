@@ -114,9 +114,9 @@ export async function handleUmpExecutedUpward(event: SubstrateEvent): Promise<vo
       e =>
         (e.event.index as EventId).toString() == CrowdloanContributedEventId
         || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId
-        || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (e.event.index as EventId).toString() == ParasumpUnsupportedVersionEventId
+      // || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
+      // || (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
+      // || (e.event.index as EventId).toString() == ParasumpUnsupportedVersionEventId
     ) as SubstrateEvent[];
     crowdloanEvents.forEach((item, i, crowdloanEvents) => {
       if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i > 0) {
@@ -149,19 +149,6 @@ export async function handleUmpExecutedUpward(event: SubstrateEvent): Promise<vo
         record.message_id = crowdloanEvents[i].event.data[0].toString();
         promises_array.push(record.save());
         logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
-      }
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpUnsupportedVersionEventId) {
-        // logger.info(JSON.stringify(crowdloanEvents[i].idx))
-        // logger.info(JSON.stringify(crowdloanEvents[i]))
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
       }
     })
     await Promise.all(promises_array);
@@ -173,62 +160,13 @@ export async function handleUmpWeightExhausted(event: SubstrateEvent): Promise<v
   const blockNumber = event.block.block.header.number.toNumber();
   const ParasumpUpwardMessagesReceivedEvent = event.extrinsic.events.find(e => (e.event.index as EventId).toString() == ParasumpUpwardMessagesReceivedEventId) as SubstrateEvent;
   if (ParasumpUpwardMessagesReceivedEvent == undefined) {
-    let promises_array = [];
-    const crowdloanEvents = event.extrinsic.events.filter(
-      e =>
-        (e.event.index as EventId).toString() == CrowdloanContributedEventId
-        || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId
-        || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (e.event.index as EventId).toString() == ParasumpUnsupportedVersionEventId
-    ) as SubstrateEvent[];
-    crowdloanEvents.forEach((item, i, crowdloanEvents) => {
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i > 0) {
-        if ((crowdloanEvents[i - 1].event.index as EventId).toString() == CrowdloanContributedEventId) {
-          const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-          record.block_height = blockNumber;
-          record.event_id = crowdloanEvents[i].idx;
-          record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-          record.block_timestamp = crowdloanEvents[i].block.timestamp;
-          record.account = crowdloanEvents[i - 1].event.data[0].toString();
-          record.para_id = crowdloanEvents[i - 1].event.data[1].toString();
-          record.balance = crowdloanEvents[i - 1].event.data[2].toString();
-          record.message_id = crowdloanEvents[i].event.data[0].toString();
-          promises_array.push(record.save());
-        } else {
-          const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-          record.block_height = blockNumber;
-          record.event_id = crowdloanEvents[i].idx;
-          record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-          record.block_timestamp = crowdloanEvents[i].block.timestamp;
-          record.message_id = crowdloanEvents[i].event.data[0].toString();
-          promises_array.push(record.save());
-        }
-      } else if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i == 0) {
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
-        logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
-      }
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpUnsupportedVersionEventId) {
-        // logger.info(JSON.stringify(crowdloanEvents[i].idx))
-        // logger.info(JSON.stringify(crowdloanEvents[i]))
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
-      }
-    })
-    await Promise.all(promises_array);
+    const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + event.idx.toString());
+    record.block_height = blockNumber;
+    record.event_id = event.idx;
+    record.extrinsic_id = event.extrinsic.idx;
+    record.block_timestamp = event.block.timestamp;
+    record.message_id = event.event.data[0].toString();
+    await record.save();
   }
 }
 
@@ -237,125 +175,43 @@ export async function handleUmpInvalidFormat(event: SubstrateEvent): Promise<voi
   const blockNumber = event.block.block.header.number.toNumber();
   const ParasumpUpwardMessagesReceivedEvent = event.extrinsic.events.find(e => (e.event.index as EventId).toString() == ParasumpUpwardMessagesReceivedEventId) as SubstrateEvent;
   if (ParasumpUpwardMessagesReceivedEvent == undefined) {
-    let promises_array = [];
-    const crowdloanEvents = event.extrinsic.events.filter(
-      e =>
-        (e.event.index as EventId).toString() == CrowdloanContributedEventId
-        || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId
-        || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (e.event.index as EventId).toString() == ParasumpUnsupportedVersionEventId
-    ) as SubstrateEvent[];
-    crowdloanEvents.forEach((item, i, crowdloanEvents) => {
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i > 0) {
-        if ((crowdloanEvents[i - 1].event.index as EventId).toString() == CrowdloanContributedEventId) {
-          const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-          record.block_height = blockNumber;
-          record.event_id = crowdloanEvents[i].idx;
-          record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-          record.block_timestamp = crowdloanEvents[i].block.timestamp;
-          record.account = crowdloanEvents[i - 1].event.data[0].toString();
-          record.para_id = crowdloanEvents[i - 1].event.data[1].toString();
-          record.balance = crowdloanEvents[i - 1].event.data[2].toString();
-          record.message_id = crowdloanEvents[i].event.data[0].toString();
-          promises_array.push(record.save());
-        } else {
-          const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-          record.block_height = blockNumber;
-          record.event_id = crowdloanEvents[i].idx;
-          record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-          record.block_timestamp = crowdloanEvents[i].block.timestamp;
-          record.message_id = crowdloanEvents[i].event.data[0].toString();
-          promises_array.push(record.save());
-        }
-      } else if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i == 0) {
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
-        logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
-      }
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpUnsupportedVersionEventId) {
-        // logger.info(JSON.stringify(crowdloanEvents[i].idx))
-        // logger.info(JSON.stringify(crowdloanEvents[i]))
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
-      }
-    })
-    await Promise.all(promises_array);
+    const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + event.idx.toString());
+    record.block_height = blockNumber;
+    record.event_id = event.idx;
+    record.extrinsic_id = event.extrinsic.idx;
+    record.block_timestamp = event.block.timestamp;
+    record.message_id = event.event.data[0].toString();
+    await record.save();
+    // let promises_array = [];
+    // const crowdloanEvents = event.extrinsic.events.filter(
+    //   e =>
+    //     (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
+    // ) as SubstrateEvent[];
+    // crowdloanEvents.forEach((item, i, crowdloanEvents) => {
+    //   const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
+    //   record.block_height = blockNumber;
+    //   record.event_id = crowdloanEvents[i].idx;
+    //   record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
+    //   record.block_timestamp = crowdloanEvents[i].block.timestamp;
+    //   record.message_id = crowdloanEvents[i].event.data[0].toString();
+    //   promises_array.push(record.save());
+    // })
+    // await Promise.all(promises_array);
   }
 }
+
 
 
 export async function handleUmpUnsupportedVersion(event: SubstrateEvent): Promise<void> {
   const blockNumber = event.block.block.header.number.toNumber();
   const ParasumpUpwardMessagesReceivedEvent = event.extrinsic.events.find(e => (e.event.index as EventId).toString() == ParasumpUpwardMessagesReceivedEventId) as SubstrateEvent;
   if (ParasumpUpwardMessagesReceivedEvent == undefined) {
-    let promises_array = [];
-    const crowdloanEvents = event.extrinsic.events.filter(
-      e =>
-        (e.event.index as EventId).toString() == CrowdloanContributedEventId
-        || (e.event.index as EventId).toString() == ParasumpExecutedUpwardEventId
-        || (e.event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (e.event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (e.event.index as EventId).toString() == ParasumpUnsupportedVersionEventId
-    ) as SubstrateEvent[];
-    crowdloanEvents.forEach((item, i, crowdloanEvents) => {
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i > 0) {
-        if ((crowdloanEvents[i - 1].event.index as EventId).toString() == CrowdloanContributedEventId) {
-          const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-          record.block_height = blockNumber;
-          record.event_id = crowdloanEvents[i].idx;
-          record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-          record.block_timestamp = crowdloanEvents[i].block.timestamp;
-          record.account = crowdloanEvents[i - 1].event.data[0].toString();
-          record.para_id = crowdloanEvents[i - 1].event.data[1].toString();
-          record.balance = crowdloanEvents[i - 1].event.data[2].toString();
-          record.message_id = crowdloanEvents[i].event.data[0].toString();
-          promises_array.push(record.save());
-        } else {
-          const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-          record.block_height = blockNumber;
-          record.event_id = crowdloanEvents[i].idx;
-          record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-          record.block_timestamp = crowdloanEvents[i].block.timestamp;
-          record.message_id = crowdloanEvents[i].event.data[0].toString();
-          promises_array.push(record.save());
-        }
-      } else if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpExecutedUpwardEventId && i == 0) {
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
-        logger.info(`This ExecutedUpward event missing matching Contributed event: ${blockNumber}-${crowdloanEvents[i].idx}`)
-      }
-      if ((crowdloanEvents[i].event.index as EventId).toString() == ParasumpWeightExhaustedEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpInvalidFormatEventId
-        || (crowdloanEvents[i].event.index as EventId).toString() == ParasumpUnsupportedVersionEventId) {
-        // logger.info(JSON.stringify(crowdloanEvents[i].idx))
-        // logger.info(JSON.stringify(crowdloanEvents[i]))
-        const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + crowdloanEvents[i].idx.toString());
-        record.block_height = blockNumber;
-        record.event_id = crowdloanEvents[i].idx;
-        record.extrinsic_id = crowdloanEvents[i].extrinsic.idx;
-        record.block_timestamp = crowdloanEvents[i].block.timestamp;
-        record.message_id = crowdloanEvents[i].event.data[0].toString();
-        promises_array.push(record.save());
-      }
-    })
-    await Promise.all(promises_array);
+    const record = new CrowdloanContributedSecondCheck(blockNumber.toString() + '-' + event.idx.toString());
+    record.block_height = blockNumber;
+    record.event_id = event.idx;
+    record.extrinsic_id = event.extrinsic.idx;
+    record.block_timestamp = event.block.timestamp;
+    record.message_id = event.event.data[0].toString();
+    await record.save();
   }
 }
