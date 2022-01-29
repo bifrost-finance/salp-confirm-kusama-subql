@@ -4,14 +4,10 @@ repository: https://github.com/bifrost-finance/salp-confirm-kusama-subql.git
 schema: ./schema.graphql
 network:
     endpoint: 'wss://kusama-rpc.polkadot.io'
-    # endpoint: 'wss://kusama-rpc.testnet.liebi.com/ws'
-    # endpoint: 'wss://kusama-rpc.liebi.com/ws'
-  # dictionary: https://api.subquery.network/sq/subquery/dictionary-polkadot
 dataSources:
   - name: main
     kind: substrate/Runtime
-    startBlock: 9246356
-    # startBlock: 8324700
+    startBlock: 11171248
     mapping:
       handlers:
         - handler: parasUmp
@@ -21,16 +17,6 @@ dataSources:
           filter:
             module: ump
             method: UpwardMessagesReceived
-        # - handler: handleContributed
-        #   kind: substrate/EventHandler
-        #   filter:
-        #     module: crowdloan
-        #     method: Contributed
-        # - handler: handleSystemExtrinsicFailed
-        #   kind: substrate/EventHandler
-        #   filter:
-        #     module: system
-        #     method: ExtrinsicFailed
         - handler: handleUmpExecutedUpward
           kind: substrate/EventHandler
           filter:
@@ -51,3 +37,7 @@ dataSources:
           filter:
             module: ump
             method: UnsupportedVersion
+        - handler: democracy
+          kind: substrate/BlockHandler
+        - handler: council
+          kind: substrate/BlockHandler
