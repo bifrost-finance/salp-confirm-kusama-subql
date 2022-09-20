@@ -6,7 +6,7 @@ import { ParasumpInfo } from "../types/models/ParasumpInfo";
 import { CrowdloanContributed } from "../types/models/CrowdloanContributed";
 import { CrowdloanContributedSecondCheck } from "../types/models/CrowdloanContributedSecondCheck";
 
-const paraId = 2001;
+const paraId = 2030;
 const CrowdloanContributedEventId = '0x4901';
 const ParasumpInvalidFormatEventId = '0x3b00';
 const ParasumpUnsupportedVersionEventId = '0x3b01';
