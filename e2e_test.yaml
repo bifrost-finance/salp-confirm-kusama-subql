@@ -1,0 +1,43 @@
+specVersion: 0.2.0
+name: salp-confirm-kusama-subql
+version: 1.0.0
+description: ''
+repository: https://github.com/bifrost-finance/salp-confirm-kusama-subql.git
+schema:
+  file: ./schema.graphql
+network:
+  genesisHash: '0x4eb4f12fea95e8885a8928eb8a073bed10df5a529ac59d020807f63f27efda69'
+  endpoint: ws://host.docker.internal:9900
+dataSources:
+  - kind: substrate/Runtime
+    startBlock: 1
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: parasUmp
+          kind: substrate/BlockHandler
+        - handler: handleParasUmpUpwardMessagesReceived
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: UpwardMessagesReceived
+        - handler: handleUmpExecutedUpward
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: ExecutedUpward
+        - handler: handleUmpWeightExhausted
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: WeightExhausted
+        - handler: handleUmpInvalidFormat
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: InvalidFormat
+        - handler: handleUmpUnsupportedVersion
+          kind: substrate/EventHandler
+          filter:
+            module: ump
+            method: UnsupportedVersion
