@@ -1,4 +1,4 @@
-IMAGE=harbor.liebi.com/salp/kusama-subql:v1.5
+IMAGE=harbor.liebi.com/salp/kusama-subql:v1.6
 DEPLOYMENT="salp1-kusama-subql salp2-kusama-subql salp3-kusama-subql salp4-kusama-subql salp5-kusama-subql"
 
 build:
@@ -13,4 +13,4 @@ deploy: build
 	kubectl set image deploy -n salp salp5-kusama-subql salp5-kusama-subql=${IMAGE}
 
 update: deploy
-	kubectl rollout restart -n salp salp1-kusama-subql salp2-kusama-subql salp3-kusama-subql salp4-kusama-subql salp5-kusama-subql
+	kubectl rollout restart deploy -n salp salp1-kusama-subql salp2-kusama-subql salp3-kusama-subql salp4-kusama-subql salp5-kusama-subql
