@@ -1,4 +1,5 @@
-IMAGE=harbor.liebi.com/salp-polkadot/polkadot-subql:v1.6
+BUILD_VERSION   := $(shell git log -1 --pretty='%h')
+IMAGE=harbor.liebi.com/salp-polkadot/polkadot-subql:${BUILD_VERSION}
 
 
 build:
